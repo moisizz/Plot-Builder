@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>914</width>
+    <height>561</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Спирограф</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <widget class="QWidget" name="verticalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>911</width>
+      <height>531</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="plotArea">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetMaximumSize</enum>
+     </property>
+     <item>
+      <widget class="QGroupBox" name="toolBox">
+       <property name="title">
+        <string/>
+       </property>
+       <widget class="QPushButton" name="scaleReset">
+        <property name="geometry">
+         <rect>
+          <x>360</x>
+          <y>5</y>
+          <width>70</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Сбросить</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="scaleLabel">
+        <property name="geometry">
+         <rect>
+          <x>11</x>
+          <y>6</y>
+          <width>60</width>
+          <height>15</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Масштаб:</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="scaleXLabel">
+        <property name="geometry">
+         <rect>
+          <x>80</x>
+          <y>7</y>
+          <width>16</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>X:</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="scaleYLabel">
+        <property name="geometry">
+         <rect>
+          <x>178</x>
+          <y>7</y>
+          <width>16</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Y:</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="intervalLabel">
+        <property name="geometry">
+         <rect>
+          <x>494</x>
+          <y>6</y>
+          <width>130</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Интервал аргумента:</string>
+        </property>
+       </widget>
+       <widget class="QDoubleSpinBox" name="intervalMin">
+        <property name="geometry">
+         <rect>
+          <x>630</x>
+          <y>5</y>
+          <width>70</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="minimum">
+         <double>-99999999.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>99999999.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.010000000000000</double>
+        </property>
+       </widget>
+       <widget class="QDoubleSpinBox" name="intervalMax">
+        <property name="geometry">
+         <rect>
+          <x>704</x>
+          <y>5</y>
+          <width>70</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="minimum">
+         <double>-99999999.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>99999999.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.010000000000000</double>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="intervalOk">
+        <property name="geometry">
+         <rect>
+          <x>780</x>
+          <y>5</y>
+          <width>81</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Применить</string>
+        </property>
+       </widget>
+       <widget class="QDoubleSpinBox" name="scaleX">
+        <property name="geometry">
+         <rect>
+          <x>93</x>
+          <y>5</y>
+          <width>80</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="decimals">
+         <number>5</number>
+        </property>
+        <property name="minimum">
+         <double>-99999999.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>99999999.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.010000000000000</double>
+        </property>
+        <property name="value">
+         <double>1.000000000000000</double>
+        </property>
+       </widget>
+       <widget class="QDoubleSpinBox" name="scaleY">
+        <property name="geometry">
+         <rect>
+          <x>191</x>
+          <y>5</y>
+          <width>80</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="decimals">
+         <number>5</number>
+        </property>
+        <property name="minimum">
+         <double>-99999999.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>99999999.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.010000000000000</double>
+        </property>
+        <property name="value">
+         <double>1.000000000000000</double>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="scaleApply">
+        <property name="geometry">
+         <rect>
+          <x>279</x>
+          <y>5</y>
+          <width>80</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Применить</string>
+        </property>
+       </widget>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>914</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="curivesMenu">
+    <property name="title">
+     <string>Кривые</string>
+    </property>
+    <addaction name="astroidAction"/>
+    <addaction name="hypocycloidAction"/>
+    <addaction name="deltoidAction"/>
+    <addaction name="bernLeminiskateAction"/>
+    <addaction name="jeronLeminiskatAction"/>
+    <addaction name="logSpiralAction"/>
+    <addaction name="circleAction"/>
+    <addaction name="trohoidAction"/>
+    <addaction name="epitrohoidAction"/>
+    <addaction name="reducedEpitrohoidAction"/>
+    <addaction name="pascalSnailAction"/>
+    <addaction name="evolventAction"/>
+    <addaction name="nefroidAction"/>
+    <addaction name="cardioidAction"/>
+    <addaction name="epicycloidAction"/>
+   </widget>
+   <addaction name="curivesMenu"/>
+  </widget>
+  <action name="saveImageAction">
+   <property name="text">
+    <string>Сохранить изображение...</string>
+   </property>
+  </action>
+  <action name="exitAction">
+   <property name="text">
+    <string>Выход</string>
+   </property>
+  </action>
+  <action name="scaleEdit">
+   <property name="text">
+    <string>Масштаб...</string>
+   </property>
+  </action>
+  <action name="constEdit">
+   <property name="text">
+    <string>Константы...</string>
+   </property>
+  </action>
+  <action name="astroidAction">
+   <property name="text">
+    <string>Астроида</string>
+   </property>
+  </action>
+  <action name="circleAction">
+   <property name="text">
+    <string>Окружность</string>
+   </property>
+  </action>
+  <action name="cardioidAction">
+   <property name="text">
+    <string>Кардиоида</string>
+   </property>
+  </action>
+  <action name="evolventAction">
+   <property name="text">
+    <string>Эвольвента</string>
+   </property>
+  </action>
+  <action name="verAnAction">
+   <property name="text">
+    <string>Верзьера Аньези</string>
+   </property>
+  </action>
+  <action name="jeronLeminiskatAction">
+   <property name="text">
+    <string>Лемниската Жероно</string>
+   </property>
+  </action>
+  <action name="bernLeminiskateAction">
+   <property name="text">
+    <string>Лемниската Бернулли</string>
+   </property>
+  </action>
+  <action name="deltoidAction">
+   <property name="text">
+    <string>Дельтоида</string>
+   </property>
+  </action>
+  <action name="logSpiralAction">
+   <property name="text">
+    <string>Логарифмическая спираль</string>
+   </property>
+  </action>
+  <action name="hypocycloidAction">
+   <property name="text">
+    <string>Гипоциклоида</string>
+   </property>
+  </action>
+  <action name="trohoidAction">
+   <property name="text">
+    <string>Трохоида</string>
+   </property>
+  </action>
+  <action name="epicycloidAction">
+   <property name="text">
+    <string>Эпициклоида</string>
+   </property>
+  </action>
+  <action name="epitrohoidAction">
+   <property name="text">
+    <string>Эпитрохоида</string>
+   </property>
+  </action>
+  <action name="nefroidAction">
+   <property name="text">
+    <string>Нефроида</string>
+   </property>
+  </action>
+  <action name="hypotrohoidAction">
+   <property name="text">
+    <string>Гипотрохоида</string>
+   </property>
+  </action>
+  <action name="cardioidAction_2">
+   <property name="text">
+    <string>Кардиоида</string>
+   </property>
+  </action>
+  <action name="pascalSnailAction">
+   <property name="text">
+    <string>Улитка Паскаля</string>
+   </property>
+  </action>
+  <action name="reducedEpitrohoidAction">
+   <property name="text">
+    <string>Укороченая эпитрохоида</string>
+   </property>
+  </action>
+  <action name="roseAction">
+   <property name="text">
+    <string>Роза</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>exitAction</sender>
+   <signal>activated()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>370</x>
+     <y>260</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
