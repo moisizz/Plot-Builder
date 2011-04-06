@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Спирограф</string>
+   <string>Осциллятор</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <property name="sizePolicy">
@@ -33,204 +33,6 @@
      <property name="sizeConstraint">
       <enum>QLayout::SetMaximumSize</enum>
      </property>
-     <item>
-      <widget class="QGroupBox" name="toolBox">
-       <property name="title">
-        <string/>
-       </property>
-       <widget class="QPushButton" name="scaleReset">
-        <property name="geometry">
-         <rect>
-          <x>360</x>
-          <y>5</y>
-          <width>70</width>
-          <height>20</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Сбросить</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="scaleLabel">
-        <property name="geometry">
-         <rect>
-          <x>11</x>
-          <y>6</y>
-          <width>60</width>
-          <height>15</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string>Масштаб:</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="scaleXLabel">
-        <property name="geometry">
-         <rect>
-          <x>80</x>
-          <y>7</y>
-          <width>16</width>
-          <height>16</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>X:</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="scaleYLabel">
-        <property name="geometry">
-         <rect>
-          <x>178</x>
-          <y>7</y>
-          <width>16</width>
-          <height>16</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Y:</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="intervalLabel">
-        <property name="geometry">
-         <rect>
-          <x>494</x>
-          <y>6</y>
-          <width>130</width>
-          <height>16</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string>Интервал аргумента:</string>
-        </property>
-       </widget>
-       <widget class="QDoubleSpinBox" name="intervalMin">
-        <property name="geometry">
-         <rect>
-          <x>630</x>
-          <y>5</y>
-          <width>70</width>
-          <height>20</height>
-         </rect>
-        </property>
-        <property name="minimum">
-         <double>-99999999.000000000000000</double>
-        </property>
-        <property name="maximum">
-         <double>99999999.000000000000000</double>
-        </property>
-        <property name="singleStep">
-         <double>0.010000000000000</double>
-        </property>
-       </widget>
-       <widget class="QDoubleSpinBox" name="intervalMax">
-        <property name="geometry">
-         <rect>
-          <x>704</x>
-          <y>5</y>
-          <width>70</width>
-          <height>20</height>
-         </rect>
-        </property>
-        <property name="minimum">
-         <double>-99999999.000000000000000</double>
-        </property>
-        <property name="maximum">
-         <double>99999999.000000000000000</double>
-        </property>
-        <property name="singleStep">
-         <double>0.010000000000000</double>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="intervalOk">
-        <property name="geometry">
-         <rect>
-          <x>780</x>
-          <y>5</y>
-          <width>81</width>
-          <height>20</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Применить</string>
-        </property>
-       </widget>
-       <widget class="QDoubleSpinBox" name="scaleX">
-        <property name="geometry">
-         <rect>
-          <x>93</x>
-          <y>5</y>
-          <width>80</width>
-          <height>20</height>
-         </rect>
-        </property>
-        <property name="decimals">
-         <number>5</number>
-        </property>
-        <property name="minimum">
-         <double>-99999999.000000000000000</double>
-        </property>
-        <property name="maximum">
-         <double>99999999.000000000000000</double>
-        </property>
-        <property name="singleStep">
-         <double>0.010000000000000</double>
-        </property>
-        <property name="value">
-         <double>1.000000000000000</double>
-        </property>
-       </widget>
-       <widget class="QDoubleSpinBox" name="scaleY">
-        <property name="geometry">
-         <rect>
-          <x>191</x>
-          <y>5</y>
-          <width>80</width>
-          <height>20</height>
-         </rect>
-        </property>
-        <property name="decimals">
-         <number>5</number>
-        </property>
-        <property name="minimum">
-         <double>-99999999.000000000000000</double>
-        </property>
-        <property name="maximum">
-         <double>99999999.000000000000000</double>
-        </property>
-        <property name="singleStep">
-         <double>0.010000000000000</double>
-        </property>
-        <property name="value">
-         <double>1.000000000000000</double>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="scaleApply">
-        <property name="geometry">
-         <rect>
-          <x>279</x>
-          <y>5</y>
-          <width>80</width>
-          <height>20</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Применить</string>
-        </property>
-       </widget>
-      </widget>
-     </item>
     </layout>
    </widget>
   </widget>
@@ -243,27 +45,14 @@
      <height>25</height>
     </rect>
    </property>
-   <widget class="QMenu" name="curivesMenu">
+   <widget class="QMenu" name="editMenu">
     <property name="title">
-     <string>Кривые</string>
+     <string>Правка</string>
     </property>
-    <addaction name="astroidAction"/>
-    <addaction name="hypocycloidAction"/>
-    <addaction name="deltoidAction"/>
-    <addaction name="bernLeminiskateAction"/>
-    <addaction name="jeronLeminiskatAction"/>
-    <addaction name="logSpiralAction"/>
-    <addaction name="circleAction"/>
-    <addaction name="trohoidAction"/>
-    <addaction name="epitrohoidAction"/>
-    <addaction name="reducedEpitrohoidAction"/>
-    <addaction name="pascalSnailAction"/>
-    <addaction name="evolventAction"/>
-    <addaction name="nefroidAction"/>
-    <addaction name="cardioidAction"/>
-    <addaction name="epicycloidAction"/>
+    <addaction name="calculateAction"/>
+    <addaction name="constEditAction"/>
    </widget>
-   <addaction name="curivesMenu"/>
+   <addaction name="editMenu"/>
   </widget>
   <action name="saveImageAction">
    <property name="text">
@@ -378,6 +167,16 @@
   <action name="roseAction">
    <property name="text">
     <string>Роза</string>
+   </property>
+  </action>
+  <action name="constEditAction">
+   <property name="text">
+    <string>Константы...</string>
+   </property>
+  </action>
+  <action name="calculateAction">
+   <property name="text">
+    <string>Просчитать и отобразить</string>
    </property>
   </action>
  </widget>
