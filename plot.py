@@ -16,8 +16,10 @@ class PlotCanvas(FigureCanvas):
         self.max_axis_y = 10
         
         self.figure = Figure(figsize=(100, 100), facecolor="white")
-        self.axes_freq = self.figure.add_subplot(121)
-        self.axes_x_v =  self.figure.add_subplot(122)
+        self.plots = {}
+        self.plots['x(t)v(t)'] = self.figure.add_subplot(121)
+        self.plots['v(x)'] = self.figure.add_subplot(122) 
+
         self.figure.subplots_adjust(left=0.05, right=0.96, wspace=0.15)
         
         FigureCanvas.__init__(self, self.figure)
@@ -43,33 +45,32 @@ class PlotCanvas(FigureCanvas):
     def set_m(self, value):
         self.m = value
 
+    #Отрисовка плоскостей
+    def draw_plot_area(self):
+        for axes in self.plots.values():
+            axes.set_title("X: 1:%.1f   Y: 1:%.1f" % (self.scale_x, self.scale_y))
+            axes.set_xticks(arange(-40,40,1))
+            axes.set_yticks(arange(-40,40,1))
+                
+            axes.set_xlim(self.min_axis_x, self.max_axis_x)
+            axes.set_ylim(self.min_axis_y, self.max_axis_y)
+            axes.grid(True)
+        
+            for label in axes.xaxis.get_ticklabels():
+                label.set_fontsize(8)
+            for label in axes.yaxis.get_ticklabels():
+                label.set_fontsize(8)
+
+            axes.plot([-10, self.time_limit], [0, 0], color="black")
+            axes.plot([0, 0], [-10, 10], color="black")
+        
+        
     #Отрисовка фигуры (не отображение)
     def draw_plot(self):
-        self.axes_freq.clear()
-        self.axes_x_v.clear()
-    
-        self.axes_freq.set_title("X: 1:%.1f   Y: 1:%.1f" % (self.scale_x, self.scale_y))
-        self.axes_freq.set_xticks(arange(-100,100,1))
-        self.axes_freq.set_yticks(arange(-100,100,1))
-        self.axes_x_v.set_title("X: 1:%.1f   Y: 1:%.1f" % (self.scale_x, self.scale_y))
-        self.axes_x_v.set_xticks(arange(-100,100,1))
-        self.axes_x_v.set_yticks(arange(-100,100,1))
-            
-        self.axes_freq.set_xlim(-1, 19)
-        self.axes_freq.set_ylim(self.min_axis_y, self.max_axis_y)
-        self.axes_freq.grid(True)
-        self.axes_x_v.set_xlim(self.min_axis_x, self.max_axis_x)
-        self.axes_x_v.set_ylim(self.min_axis_y, self.max_axis_y)
-        self.axes_x_v.grid(True)
-    
-        for label in self.axes_freq.xaxis.get_ticklabels():
-            label.set_fontsize(8)
-        for label in self.axes_freq.yaxis.get_ticklabels():
-            label.set_fontsize(8)
-        for label in self.axes_x_v.xaxis.get_ticklabels():
-            label.set_fontsize(8)
-        for label in self.axes_x_v.yaxis.get_ticklabels():
-            label.set_fontsize(8)
+        for axes in self.plots.values():
+            axes.clear()
+        
+        self.draw_plot_area()
     
         time = arange(0, self.time_limit, self.accuracy)
         v    = [1]
@@ -85,16 +86,11 @@ class PlotCanvas(FigureCanvas):
         x = [x*self.scale_y for x in x]
         v = [v*self.scale_y for v in v]
 
-        self.axes_freq.plot(time, x, 'r--', label='x(t)')
-        self.axes_freq.plot(time, v, color="green", label='v(t)')
-        self.axes_x_v.plot(x, v, color="blue", label='v(x)')
+        self.plots['x(t)v(t)'].plot(time, x, 'r--', label='x(t)')
+        self.plots['x(t)v(t)'].plot(time, v, color="green", label='v(t)')
+        self.plots['v(x)'].plot(x, v, color="blue", label='v(x)')
         
-        self.axes_freq.legend()
-        self.axes_x_v.legend()
-        
-        #Рисуем кресты осей
-        self.axes_freq.plot([-10, self.time_limit], [0, 0], color="black")
-        self.axes_freq.plot([0, 0], [-10, 10], color="black")
-        self.axes_x_v.plot([-10, 10], [0, 0], color="black")
-        self.axes_x_v.plot([0, 0], [-10, 10], color="black")
+        for axes in self.plots.values():
+            axes.legend();
+
         self.draw()
