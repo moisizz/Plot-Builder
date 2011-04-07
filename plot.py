@@ -6,6 +6,8 @@ from numpy import arange, pi, abs
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
+import time
+
 #Холст плоского графика
 class PlotCanvas(FigureCanvas):
     #Конструктор
@@ -23,7 +25,9 @@ class PlotCanvas(FigureCanvas):
         self.figure.subplots_adjust(left=0.05, right=0.96, wspace=0.15)
         
         FigureCanvas.__init__(self, self.figure)
-        self.setParent(parent)
+        self.setParent(parent)            
+        
+        self.current_time = 0
 
     #Изменение масштаба
     def set_scale_x(self, value):
@@ -63,7 +67,7 @@ class PlotCanvas(FigureCanvas):
 
             axes.plot([-10, self.time_limit], [0, 0], color="black")
             axes.plot([0, 0], [-10, 10], color="black")
-        
+            
         
     #Отрисовка фигуры (не отображение)
     def draw_plot(self):
@@ -72,7 +76,7 @@ class PlotCanvas(FigureCanvas):
         
         self.draw_plot_area()
     
-        time = arange(0, self.time_limit, self.accuracy)
+        time = arange(0, self.current_time, self.accuracy)
         v    = [1]
         x    = [0]
         
@@ -94,3 +98,17 @@ class PlotCanvas(FigureCanvas):
             axes.legend();
 
         self.draw()
+        
+    def timerEvent(self, evt):
+        '''current_size = self.ax.bbox.width, self.ax.bbox.height
+        if self.old_size != current_size:
+            self.old_size = current_size
+            self.ax.clear()
+            self.ax.grid()
+            self.draw()
+            self.ax_background = self.copy_from_bbox(self.ax.bbox)'''
+
+        if self.current_time != self.time_limit:
+            self.current_time += 1
+            
+        self.draw_plot()

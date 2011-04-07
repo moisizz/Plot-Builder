@@ -36,7 +36,7 @@ class PlotBuildApplication(QtGui.QMainWindow):
         self.plot.set_time_limit(20)       
         self.plot.set_scale_x(1)
         self.plot.set_scale_y(1)
-        self.plot.set_accuracy(0.01)
+        self.plot.set_accuracy(0.1)
         self.plot.set_k(0.005)
         self.plot.set_m(0.05)
     
@@ -52,7 +52,7 @@ class PlotBuildApplication(QtGui.QMainWindow):
     #===================================Слоты====================================
         
     def draw_plot_slot(self):
-        self.plot.draw_plot()
+        self.plot.startTimer(1)
         
     def apply_const_slot(self):
         cd = self.const_dialog.ui
