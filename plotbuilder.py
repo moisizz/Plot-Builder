@@ -22,7 +22,6 @@ class PlotBuildApplication(QtGui.QMainWindow):
         self.ui.plotArea.addWidget(self.toolbar)
         self.ui.plotArea.addWidget(self.plot)
         
-        self.const_init()
         self.const_dialog = ConstDialog()
         self.set_dialog_const()
         
@@ -36,7 +35,7 @@ class PlotBuildApplication(QtGui.QMainWindow):
         self.plot.set_time_limit(20)       
         self.plot.set_scale_x(1)
         self.plot.set_scale_y(1)
-        self.plot.set_accuracy(0.1)
+        self.plot.set_integr_step(0.1)
         self.plot.set_k(0.005)
         self.plot.set_m(0.05)
     
@@ -45,14 +44,14 @@ class PlotBuildApplication(QtGui.QMainWindow):
         cd.parameterK.setValue(self.plot.k)
         cd.parameterM.setValue(self.plot.m)
         cd.time.setValue(self.plot.time_limit)
-        cd.integrStep.setValue(self.plot.accuracy)
+        cd.integrStep.setValue(self.plot.integr_step)
         cd.scaleX.setValue(self.plot.scale_x)
         cd.scaleY.setValue(self.plot.scale_y)
     
     #===================================Слоты====================================
         
     def draw_plot_slot(self):
-        self.plot.startTimer(1)
+        self.plot.draw_plot()
         
     def apply_const_slot(self):
         cd = self.const_dialog.ui
@@ -60,14 +59,16 @@ class PlotBuildApplication(QtGui.QMainWindow):
         self.plot.set_time_limit(cd.time.value())       
         self.plot.set_scale_x(cd.scaleX.value())
         self.plot.set_scale_y(cd.scaleY.value())
-        self.plot.set_accuracy(cd.integrStep.value())
+        self.plot.set_integr_step(cd.integrStep.value())
         self.plot.set_k(cd.parameterK.value())
         self.plot.set_m(cd.parameterM.value())
+        
         self.plot.draw_plot()
     
     def reset_const_slot(self):
         self.const_init()
         self.set_dialog_const()
+        
         self.plot.draw_plot()
         
     def edit_constant_slot(self):
