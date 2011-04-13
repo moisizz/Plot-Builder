@@ -2,7 +2,7 @@
 
 import sys
 import os
-from PyQt4.QtCore import *
+from PyQt4.QtCore import SIGNAL
 from PyQt4 import QtGui
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
 
@@ -37,7 +37,7 @@ class PlotBuildApplication(QtGui.QMainWindow):
         self.plot.set_time_limit(20)       
         self.plot.set_scale_x(1)
         self.plot.set_scale_y(1)
-        self.plot.set_integr_step(0.5)
+        self.plot.set_integr_step(0.01)
         self.plot.set_k(0.005)
         self.plot.set_m(0.05)
     

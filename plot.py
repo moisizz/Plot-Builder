@@ -1,8 +1,9 @@
 # -*- coding: utf8 -*-
 
-from PyQt4 import QtGui
+from PyQt4 import QtGui, QtCore
+from QtCore import SIGNAL
 
-from numpy import arange, pi, abs
+from numpy import arange
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
@@ -27,7 +28,7 @@ class PlotCanvas(FigureCanvas):
         self.max_yticks = self.max_axis_y
         
         self.axes = fig.add_subplot(111)
-        self.figure.subplots_adjust(left=0.05, top=0.9, right=0.98, bottom=0.05)
+        self.figure.subplots_adjust(left=0.05, top=0.9, right=0.98, bottom=0.08)
 
         self.lines = {}
 
@@ -117,7 +118,7 @@ class Pendulum(PlotCanvas):
         pos = self.pos * self.scale[0]
         self.axes.plot([0, 0], [self.max_axis_y, pos], 'r-', linewidth=2)
         self.axes.plot([0], [pos], 'ro', linewidth=2)
-        self.axes.plot([-1, 1, 1, -1, -1], [pos-1, pos-1, pos+1, pos+1, pos-1], 'r-')
+        self.axes.plot([-1, 1, 1, -1, -1], [pos-1, pos-1, pos+1, pos+1, pos-1], 'ko-', linewidth=3)
         self.draw()
 
 #Осциллятор
@@ -130,20 +131,29 @@ class Oscillator(QtGui.QWidget):
         self.scale_x = 1
         self.scale_y = 1
         self.time_limit = 20
-        self.integr_step = 0.2
+        self.time_speed = 1
+        self.integr_step = 0.01
         self.k = 0.005
         self.m = 0.05    
+        self.omega = self.k/self.m
+        self.current_time = 0
+        self.timer = QtCore.QTimer()
 
         h_layout = QtGui.QHBoxLayout()
         v_layout = QtGui.QVBoxLayout()
         
+        self.connect(self.timer, SIGNAL('timeout()'), self.timer_slot)
+        
         self.plots = {}
-        self.plots['wave']     = PlotCanvas(axes_limits=(-1, -5, 25, 5), scale=(self.scale_x, self.scale_y))
-        self.plots['wave'].lines['x(t)'] = {'x':[], 'y':[], 'line_type':'g-'}
-        self.plots['wave'].lines['v(t)'] = {'x':[], 'y':[], 'line_type':'r--'}
-        self.plots['circle']   = PlotCanvas(axes_limits=(-8, -6, 8, 6), scale=(self.scale_x, self.scale_y))
+        self.plots['wave']     = PlotCanvas(axes_limits=(-1, -5, 50, 5), scale=(self.scale_x, self.scale_y))
+        self.plots['circle']   = PlotCanvas(axes_limits=(-15, -6, 15, 6),  scale=(self.scale_x, self.scale_y))
+        self.plots['pendulum'] =   Pendulum(axes_limits=(-10, -5, 10, 5),  scale=(self.scale_x, self.scale_y))
+
+        self.plots['wave'].figure.subplots_adjust(left=0.025, right=0.99)
+
+        self.plots['wave'].lines['x(t)']   = {'x':[], 'y':[], 'line_type':'g-'}
+        self.plots['wave'].lines['v(t)']   = {'x':[], 'y':[], 'line_type':'r--'}
         self.plots['circle'].lines['v(x)'] = {'x':[], 'y':[], 'line_type':'b-'}
-        self.plots['pendulum'] = Pendulum(axes_limits=(-5, -5, 5, 5), scale=(self.scale_x, self.scale_y))
         
         h_layout.addWidget(self.plots['circle'])
         h_layout.addWidget(self.plots['pendulum'])
@@ -151,7 +161,6 @@ class Oscillator(QtGui.QWidget):
         v_layout.addWidget(self.plots['wave'])
         
         self.setLayout(v_layout)
-        self.current_time = 0
 
     #Изменение масштаба
     def set_scale_x(self, value):
@@ -175,9 +184,11 @@ class Oscillator(QtGui.QWidget):
 
     def set_k(self, value):
         self.k = value
+        self.omega = self.k/self.m
         
     def set_m(self, value):
         self.m = value
+        self.omega = self.k/self.m
 
     #Сохранить графики
     def save_plots(self, path):
@@ -188,7 +199,7 @@ class Oscillator(QtGui.QWidget):
         x = 0
         v = 1
 
-        for t in arange(0, self.time_limit+self.integr_step, self.integr_step):
+        for t in arange(0, self.current_time+self.integr_step, self.integr_step):
             t_values.append(t)
             x_values.append(x)
             v_values.append(v)            
@@ -227,31 +238,32 @@ class Oscillator(QtGui.QWidget):
         for plot in self.plots.values():
             plot.draw_plot_area()
         
-        self.startTimer(1)       
+        self.timer.start(1)       
         
     #Расчет необходимых значений
-    def calculate_values(self, x, v):   
-        omega = self.k/self.m
-        
-        new_v = v - (omega*x*self.integr_step)
+    def calculate_values(self, x, v):        
+        new_v = v - (self.omega*x*self.integr_step)
         new_x = x + (new_v*self.integr_step)
 
         return (new_x, new_v)
         
-    #Событие таймера, рисующ
-    def timerEvent(self, evt):
-        if self.current_time <= self.time_limit:            
-            self.plots['wave'].lines['x(t)']['x'].append(self.current_time)
-            self.plots['wave'].lines['x(t)']['y'].append(self.x)
-            self.plots['wave'].lines['v(t)']['x'].append(self.current_time)
-            self.plots['wave'].lines['v(t)']['y'].append(self.v)
-            self.plots['circle'].lines['v(x)']['x'].append(self.x)
-            self.plots['circle'].lines['v(x)']['y'].append(self.v)
-            self.plots['pendulum'].set_pos(self.x)
+    #Слот таймера
+    def timer_slot(self):
+        if self.current_time < self.time_limit:            
+            for t in arange(self.current_time, self.current_time+self.time_speed, self.integr_step):
+                (self.x, self.v) = self.calculate_values(self.x, self.v)
+
+                self.plots['wave'].lines['x(t)']['x'].append(t)
+                self.plots['wave'].lines['x(t)']['y'].append(self.x)
+                self.plots['wave'].lines['v(t)']['x'].append(t)
+                self.plots['wave'].lines['v(t)']['y'].append(self.v)
+                self.plots['circle'].lines['v(x)']['x'].append(self.x)
+                self.plots['circle'].lines['v(x)']['y'].append(self.v)
+                self.plots['pendulum'].set_pos(self.x)
             
             for plot in self.plots.values():
                 plot.draw_animated()
-                
-            self.current_time += self.integr_step
-            
-            (self.x, self.v) = self.calculate_values(self.x, self.v)
+
+            self.current_time += self.time_speed
+        else:
+            self.timer.stop()
