@@ -1,13 +1,14 @@
 # -*- coding: utf8 -*-
 
 import sys
+import os
 from PyQt4.QtCore import *
 from PyQt4 import QtGui
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
 
 from form_ui import Ui_MainWindow
 from const_dialog import ConstDialog
-from plot import PlotCanvas
+from plot import Oscillator
 
 #Класс построителя графиков
 class PlotBuildApplication(QtGui.QMainWindow):
@@ -17,9 +18,9 @@ class PlotBuildApplication(QtGui.QMainWindow):
         self.ui.setupUi(self)
         self.ui.centralWidget.setLayout(self.ui.plotArea)
         
-        self.plot = PlotCanvas(self.ui.centralWidget)
-        self.toolbar = NavigationToolbar(self.plot, self)
-        self.ui.plotArea.addWidget(self.toolbar)
+        self.plot = Oscillator(self.ui.centralWidget)
+        #self.toolbar = NavigationToolbar(self.plot, self)
+        #self.ui.plotArea.addWidget(self.toolbar)
         self.ui.plotArea.addWidget(self.plot)
         
         self.const_dialog = ConstDialog()
@@ -27,6 +28,7 @@ class PlotBuildApplication(QtGui.QMainWindow):
         
         self.connect(self.ui.constEditAction, SIGNAL('activated()'), self.edit_constant_slot)
         self.connect(self.ui.calculateAction, SIGNAL('activated()'), self.draw_plot_slot)
+        self.connect(self.ui.saveImageAction, SIGNAL('activated()'), self.save_plot_image_slot)
         
         self.connect(self.const_dialog.ui.applyButton, SIGNAL('clicked()'), self.apply_const_slot)
         self.connect(self.const_dialog.ui.resetButton, SIGNAL('clicked()'), self.reset_const_slot)
@@ -35,7 +37,7 @@ class PlotBuildApplication(QtGui.QMainWindow):
         self.plot.set_time_limit(20)       
         self.plot.set_scale_x(1)
         self.plot.set_scale_y(1)
-        self.plot.set_integr_step(0.1)
+        self.plot.set_integr_step(0.5)
         self.plot.set_k(0.005)
         self.plot.set_m(0.05)
     
@@ -51,7 +53,7 @@ class PlotBuildApplication(QtGui.QMainWindow):
     #===================================Слоты====================================
         
     def draw_plot_slot(self):
-        self.plot.draw_plot()
+        self.plot.start_animated_draw()
         
     def apply_const_slot(self):
         cd = self.const_dialog.ui
@@ -63,17 +65,24 @@ class PlotBuildApplication(QtGui.QMainWindow):
         self.plot.set_k(cd.parameterK.value())
         self.plot.set_m(cd.parameterM.value())
         
-        self.plot.draw_plot()
+        self.plot.start_animated_draw()
     
     def reset_const_slot(self):
         self.const_init()
         self.set_dialog_const()
         
-        self.plot.draw_plot()
+        self.plot.start_animated_draw()
         
     def edit_constant_slot(self):
         self.set_dialog_const()        
         self.const_dialog.show()
+
+    def save_plot_image_slot(self):
+        path = QtGui.QFileDialog.getExistingDirectory()
+    
+        if path:
+            self.plot.save_plots(path)
+        
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)

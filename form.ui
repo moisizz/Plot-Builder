@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>914</width>
-    <height>561</height>
+    <width>803</width>
+    <height>574</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -25,8 +25,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>911</width>
-      <height>531</height>
+      <width>801</width>
+      <height>541</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="plotArea">
@@ -41,7 +41,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>914</width>
+     <width>803</width>
      <height>25</height>
     </rect>
    </property>
@@ -50,123 +50,14 @@
      <string>Правка</string>
     </property>
     <addaction name="calculateAction"/>
+    <addaction name="saveImageAction"/>
     <addaction name="constEditAction"/>
    </widget>
    <addaction name="editMenu"/>
   </widget>
-  <action name="saveImageAction">
-   <property name="text">
-    <string>Сохранить изображение...</string>
-   </property>
-  </action>
   <action name="exitAction">
    <property name="text">
     <string>Выход</string>
-   </property>
-  </action>
-  <action name="scaleEdit">
-   <property name="text">
-    <string>Масштаб...</string>
-   </property>
-  </action>
-  <action name="constEdit">
-   <property name="text">
-    <string>Константы...</string>
-   </property>
-  </action>
-  <action name="astroidAction">
-   <property name="text">
-    <string>Астроида</string>
-   </property>
-  </action>
-  <action name="circleAction">
-   <property name="text">
-    <string>Окружность</string>
-   </property>
-  </action>
-  <action name="cardioidAction">
-   <property name="text">
-    <string>Кардиоида</string>
-   </property>
-  </action>
-  <action name="evolventAction">
-   <property name="text">
-    <string>Эвольвента</string>
-   </property>
-  </action>
-  <action name="verAnAction">
-   <property name="text">
-    <string>Верзьера Аньези</string>
-   </property>
-  </action>
-  <action name="jeronLeminiskatAction">
-   <property name="text">
-    <string>Лемниската Жероно</string>
-   </property>
-  </action>
-  <action name="bernLeminiskateAction">
-   <property name="text">
-    <string>Лемниската Бернулли</string>
-   </property>
-  </action>
-  <action name="deltoidAction">
-   <property name="text">
-    <string>Дельтоида</string>
-   </property>
-  </action>
-  <action name="logSpiralAction">
-   <property name="text">
-    <string>Логарифмическая спираль</string>
-   </property>
-  </action>
-  <action name="hypocycloidAction">
-   <property name="text">
-    <string>Гипоциклоида</string>
-   </property>
-  </action>
-  <action name="trohoidAction">
-   <property name="text">
-    <string>Трохоида</string>
-   </property>
-  </action>
-  <action name="epicycloidAction">
-   <property name="text">
-    <string>Эпициклоида</string>
-   </property>
-  </action>
-  <action name="epitrohoidAction">
-   <property name="text">
-    <string>Эпитрохоида</string>
-   </property>
-  </action>
-  <action name="nefroidAction">
-   <property name="text">
-    <string>Нефроида</string>
-   </property>
-  </action>
-  <action name="hypotrohoidAction">
-   <property name="text">
-    <string>Гипотрохоида</string>
-   </property>
-  </action>
-  <action name="cardioidAction_2">
-   <property name="text">
-    <string>Кардиоида</string>
-   </property>
-  </action>
-  <action name="pascalSnailAction">
-   <property name="text">
-    <string>Улитка Паскаля</string>
-   </property>
-  </action>
-  <action name="reducedEpitrohoidAction">
-   <property name="text">
-    <string>Укороченая эпитрохоида</string>
-   </property>
-  </action>
-  <action name="roseAction">
-   <property name="text">
-    <string>Роза</string>
    </property>
   </action>
   <action name="constEditAction">
@@ -177,6 +68,11 @@
   <action name="calculateAction">
    <property name="text">
     <string>Просчитать и отобразить</string>
+   </property>
+  </action>
+  <action name="saveImageAction">
+   <property name="text">
+    <string>Сохранить изображение...</string>
    </property>
   </action>
  </widget>
