@@ -7,8 +7,6 @@ from numpy import arange
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
-import time
-
 class PlotCanvas(FigureCanvas):
     def __init__(self, axes_limits=(-10,-10,10,10), scale=(1.0,1.0), parent=None):
         fig = Figure(facecolor="white")
@@ -16,6 +14,7 @@ class PlotCanvas(FigureCanvas):
         self.setParent(parent)
 
         self.scale = scale
+        self.grid  = True
         
         self.min_axis_x = axes_limits[0]
         self.min_axis_y = axes_limits[1]
@@ -33,39 +32,51 @@ class PlotCanvas(FigureCanvas):
         self.lines = {}
 
         self.draw_plot_area()
-    
-    #Сохранение картинки графика
+
+    def add_line(self, name, color):
+        self.lines[name] = {'x':[], 'y':[], 'name':name, 'color':color}
+        line_plot, = self.plot(self.lines[name], is_animated=True)
+        self.lines[name]['line_plot'] = line_plot
+        
     def save_plot(self, path):
-        self.figure.canvas.print_figure(path)
+        self.figure.canvas.print_figure(path)    
         
-    #Очистка для статичного отображения
-    def static_clear(self):
+    def plot(self, line, is_animated=False):
+        return self.axes.plot([self.scale[0]*x for x in line['x']], 
+                              [self.scale[1]*y for y in line['y']],
+                              linestyle='None', alpha=1, antialiased=False,
+                              marker=',', mew=0.5, color=line['color'], ms=1.5, 
+                              animated=is_animated, label=line['name'])
+
+    def drop_points(self):
+        for line in self.lines.values():
+            line['x'] = []
+            line['y'] = []
+
+    def add_point(self, name, coords):
+        self.lines[name]['x'].append(self.scale[0]*coords[0])
+        self.lines[name]['y'].append(self.scale[1]*coords[1])
+        
+    def clear_plot_clear(self):
         self.axes.clear()
-        
-    #Очистка для анимированного отображения
-    def animated_clear(self):
-        self.draw()
         
     def draw_static(self):    
         self.draw_plot_area()
         
-        for name, plot in self.lines.items():
-            self.axes.plot([self.scale[0]*x for x in plot['x']], 
-                           [self.scale[1]*y for y in plot['y']], 
-                           plot['line_type'], label=name, linewidth=0.8)
+        for name, line in self.lines.items():
+            self.plot(line)
+                       
         self.draw()
             
-    def draw_animated(self):
+    def draw_animated(self, is_animated=True):
         self.restore_region(self.background)
-        for name, plot in self.lines.items():
-            line, = self.axes.plot([self.scale[0]*x for x in plot['x']], 
-                                   [self.scale[1]*y for y in plot['y']], 
-                                   plot['line_type'], 
-                                   animated=True, label=name, linewidth=0.8)
-            self.axes.draw_artist(line)
-            self.blit(self.axes.bbox)
+        for name, line in self.lines.items():
+            line['line_plot'].set_xdata(line['x'])
+            line['line_plot'].set_ydata(line['y'])
+            self.axes.draw_artist(line['line_plot'])
         
-    #Отрисовка плоскостей
+        self.blit(self.axes.bbox)
+        
     def draw_plot_area(self):     
         self.axes.clear()          
         self.axes.set_title("X:%.2f   Y:%.2f" % self.scale)
@@ -74,7 +85,7 @@ class PlotCanvas(FigureCanvas):
             
         self.axes.set_xlim(self.min_axis_x, self.max_axis_x)
         self.axes.set_ylim(self.min_axis_y, self.max_axis_y)
-        self.axes.grid(True)
+        self.axes.grid(self.grid)
     
         for label in self.axes.xaxis.get_ticklabels():
             label.set_fontsize(8)
@@ -85,7 +96,7 @@ class PlotCanvas(FigureCanvas):
         self.axes.plot([0, 0], [self.min_axis_y - 1, self.max_axis_y + 1], color="black")
         
         for name, plot in self.lines.items():
-            self.axes.plot(plot['x'], plot['y'], plot['line_type'], label=name)
+            self.axes.plot(plot['x'], plot['y'],  plot['color'], label=name)
         
         if len(self.lines) != 0:
             self.axes.legend()    
@@ -94,10 +105,15 @@ class PlotCanvas(FigureCanvas):
         self.background = self.copy_from_bbox(self.axes.bbox)
 
 
+
 class Pendulum(PlotCanvas):
     def __init__(self, title='', axes_limits=(-10,-10,10,10), scale=(1.0,1.0), parent=None):
         PlotCanvas.__init__(self, axes_limits, scale, parent)
-        self.pos = 0
+        pos = 0
+        self.pos = pos
+        self.thread, = self.axes.plot([0, 0], [self.max_axis_y, pos], 'r-', linewidth=2)
+        self.link,   = self.axes.plot([0], [pos], 'ro', linewidth=2)
+        self.weight, = self.axes.plot([-1, 1, 1, -1, -1], [pos-1, pos-1, pos+1, pos+1, pos-1], 'ko-', linewidth=3) 
         
     def draw_plot_area(self):
         self.axes.set_title(u"Маятник")
@@ -105,12 +121,23 @@ class Pendulum(PlotCanvas):
         self.axes.set_ylim(self.min_axis_y, self.max_axis_y)
         self.axes.plot([self.min_axis_x - 1, self.max_axis_x + 1], [0, 0], color="black")
         self.axes.plot([0, 0], [self.min_axis_y - 1, self.max_axis_y + 1], color="black")
+        self.draw()
+        self.background = self.copy_from_bbox(self.axes.bbox)
 
     def draw_animated(self):
-        self.draw_static()
+        pos = self.pos
+        self.thread.set_ydata([self.max_axis_y, pos])
+        self.link.set_ydata([pos])
+        self.weight.set_ydata([pos-1, pos-1, pos+1, pos+1, pos-1])
+
+        self.restore_region(self.background)
+        self.axes.draw_artist(self.thread)
+        self.axes.draw_artist(self.link)
+        self.axes.draw_artist(self.weight)
+        self.blit(self.axes.bbox)
                 
     def set_pos(self, value):
-        self.pos = value
+        self.pos = value*self.scale[1]
                 
     def draw_static(self):    
         self.axes.clear()
@@ -121,9 +148,9 @@ class Pendulum(PlotCanvas):
         self.axes.plot([-1, 1, 1, -1, -1], [pos-1, pos-1, pos+1, pos+1, pos-1], 'ko-', linewidth=3)
         self.draw()
 
-#Осциллятор
+
+
 class Oscillator(QtGui.QWidget):
-    #Конструктор
     def __init__(self, parent=None):  
         QtGui.QWidget.__init__(self, parent)   
         self.setParent(parent)           
@@ -151,9 +178,10 @@ class Oscillator(QtGui.QWidget):
 
         self.plots['wave'].figure.subplots_adjust(left=0.025, right=0.99)
 
-        self.plots['wave'].lines['x(t)']   = {'x':[], 'y':[], 'line_type':'g-'}
-        self.plots['wave'].lines['v(t)']   = {'x':[], 'y':[], 'line_type':'r--'}
-        self.plots['circle'].lines['v(x)'] = {'x':[], 'y':[], 'line_type':'b-'}
+        self.plots['wave'].add_line('x(t)','g')
+        self.plots['wave'].add_line('v(t)','r')
+        self.plots['circle'].add_line('v(x)','b')
+        self.plots['circle'].add_line('eiler_v(x)', 'k')
         
         h_layout.addWidget(self.plots['circle'])
         h_layout.addWidget(self.plots['pendulum'])
@@ -162,7 +190,6 @@ class Oscillator(QtGui.QWidget):
         
         self.setLayout(v_layout)
 
-    #Изменение масштаба
     def set_scale_x(self, value):
         self.scale_x = value
         self.update_scale()
@@ -175,7 +202,10 @@ class Oscillator(QtGui.QWidget):
         for plot in self.plots.values():
             plot.scale = (self.scale_x, self.scale_y)
 
-    #Изменение границ области определения аргумента
+    def set_grid(self, value):
+        for plot in self.plots.values():
+            plot.grid = value
+
     def set_time_limit(self, value):
         self.time_limit = value
 
@@ -189,77 +219,58 @@ class Oscillator(QtGui.QWidget):
     def set_m(self, value):
         self.m = value
         self.omega = self.k/self.m
-
-    #Сохранить графики
-    def save_plots(self, path):
-        t_values = []
-        x_values = []
-        v_values = []
         
-        x = 0
-        v = 1
+    def clear_plots(self):       
+        self.current_time = 0
+        self.x = 0
+        self.v = 1
+        self.eiler_x = 0
+        self.eiler_v = 1
+        
+        for plot in self.plots.values():
+            plot.drop_points()
+            plot.clear_plot_clear()
+            plot.draw_plot_area()  
+        
+    def calculate_values(self): 
+        self.v = self.v - (self.omega*self.x*self.integr_step)
+        self.x = self.x + (self.v*self.integr_step)
+        
+        eiler_v = self.eiler_v
+        self.eiler_v = self.eiler_v - (self.omega*self.eiler_x*self.integr_step)
+        self.eiler_x = self.eiler_x + (eiler_v*self.integr_step) 
 
-        for t in arange(0, self.current_time+self.integr_step, self.integr_step):
-            t_values.append(t)
-            x_values.append(x)
-            v_values.append(v)            
-            (x, v) = self.calculate_values(x, v)
+    def append_points(self):
+        self.plots['wave'].add_point('x(t)',   (self.t, self.x))
+        self.plots['wave'].add_point('v(t)',   (self.t, self.v))
+        self.plots['circle'].add_point('v(x)', (self.x, self.v))
+        self.plots['circle'].add_point('eiler_v(x)', (self.eiler_x, self.eiler_v))
+        self.plots['pendulum'].set_pos(self.x)
+
+    def save_plots(self, path):
+        self.clear_plots()
+
+        for t in arange(0, self.time_limit+self.integr_step, self.integr_step):
+            self.t = t           
+            self.append_points()
+            self.calculate_values()
             
-        self.plots['wave'].lines['x(t)']['x']   = t_values
-        self.plots['wave'].lines['x(t)']['y']   = x_values
-        self.plots['wave'].lines['v(t)']['x']   = t_values
-        self.plots['wave'].lines['v(t)']['y']   = v_values
-        self.plots['circle'].lines['v(x)']['x'] = x_values
-        self.plots['circle'].lines['v(x)']['y'] = v_values
-        self.plots['pendulum'].set_pos(x_values[-1])
-    
         for plot in self.plots.values():
             plot.draw_static()
 
         for name, plot in self.plots.items():
             plot.save_plot('%s/%s.png' % (path, name))
 
-    #Начать анимированную отрисовку графиков
     def start_animated_draw(self):        
-        self.current_time = 0
-        for axes in self.plots.values():
-            axes.animated_clear()
-            
-        self.x = 0
-        self.v = 1
-
-        self.plots['wave'].lines['x(t)']['x'] = [self.current_time]
-        self.plots['wave'].lines['x(t)']['y'] = [self.x]
-        self.plots['wave'].lines['v(t)']['x'] = [self.current_time]
-        self.plots['wave'].lines['v(t)']['y'] = [self.v]
-        self.plots['circle'].lines['v(x)']['x'] = [self.x]
-        self.plots['circle'].lines['v(x)']['y'] = [self.v]
-        
-        for plot in self.plots.values():
-            plot.draw_plot_area()
-        
+        self.clear_plots()       
         self.timer.start(1)       
         
-    #Расчет необходимых значений
-    def calculate_values(self, x, v):        
-        new_v = v - (self.omega*x*self.integr_step)
-        new_x = x + (new_v*self.integr_step)
-
-        return (new_x, new_v)
-        
-    #Слот таймера
     def timer_slot(self):
         if self.current_time < self.time_limit:            
             for t in arange(self.current_time, self.current_time+self.time_speed, self.integr_step):
-                (self.x, self.v) = self.calculate_values(self.x, self.v)
-
-                self.plots['wave'].lines['x(t)']['x'].append(t)
-                self.plots['wave'].lines['x(t)']['y'].append(self.x)
-                self.plots['wave'].lines['v(t)']['x'].append(t)
-                self.plots['wave'].lines['v(t)']['y'].append(self.v)
-                self.plots['circle'].lines['v(x)']['x'].append(self.x)
-                self.plots['circle'].lines['v(x)']['y'].append(self.v)
-                self.plots['pendulum'].set_pos(self.x)
+                self.t = t
+                self.append_points()
+                self.calculate_values()
             
             for plot in self.plots.values():
                 plot.draw_animated()

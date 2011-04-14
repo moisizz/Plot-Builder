@@ -6,11 +6,17 @@ from PyQt4.QtCore import SIGNAL
 from PyQt4 import QtGui
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
 
-from form_ui import Ui_MainWindow
-from const_dialog import ConstDialog
+from form import Ui_MainWindow
+from const_dialog import Ui_Dialog
 from plot import Oscillator
 
-#Класс построителя графиков
+
+class ConstDialog(QtGui.QDialog):
+    def __init__(self, parent=None):
+        QtGui.QWidget.__init__(self, parent)
+        self.ui = Ui_Dialog()
+        self.ui.setupUi(self)
+
 class PlotBuildApplication(QtGui.QMainWindow):
     def __init__(self, parent=None):
         QtGui.QWidget.__init__(self, parent)
@@ -19,11 +25,9 @@ class PlotBuildApplication(QtGui.QMainWindow):
         self.ui.centralWidget.setLayout(self.ui.plotArea)
         
         self.plot = Oscillator(self.ui.centralWidget)
-        #self.toolbar = NavigationToolbar(self.plot, self)
-        #self.ui.plotArea.addWidget(self.toolbar)
         self.ui.plotArea.addWidget(self.plot)
         
-        self.const_dialog = ConstDialog()
+        self.const_dialog = ConstDialog(self)
         self.set_dialog_const()
         
         self.connect(self.ui.constEditAction, SIGNAL('activated()'), self.edit_constant_slot)
@@ -49,6 +53,7 @@ class PlotBuildApplication(QtGui.QMainWindow):
         cd.integrStep.setValue(self.plot.integr_step)
         cd.scaleX.setValue(self.plot.scale_x)
         cd.scaleY.setValue(self.plot.scale_y)
+        cd.showGrid.setChecked(True)
     
     #===================================Слоты====================================
         
@@ -64,6 +69,7 @@ class PlotBuildApplication(QtGui.QMainWindow):
         self.plot.set_integr_step(cd.integrStep.value())
         self.plot.set_k(cd.parameterK.value())
         self.plot.set_m(cd.parameterM.value())
+        self.plot.set_grid(cd.showGrid.isChecked())
         
         self.plot.start_animated_draw()
     
