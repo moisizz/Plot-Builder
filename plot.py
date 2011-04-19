@@ -180,6 +180,8 @@ class Oscillator(QtGui.QWidget):
 
         self.plots['wave'].add_line('x(t)','g')
         self.plots['wave'].add_line('v(t)','r')
+        self.plots['wave'].add_line('dH(t)', 'b')
+        self.plots['wave'].add_line('eiler_dH(t)', 'k')
         self.plots['circle'].add_line('v(x)','b')
         self.plots['circle'].add_line('eiler_v(x)', 'k')
         
@@ -224,9 +226,12 @@ class Oscillator(QtGui.QWidget):
         self.current_time = 0
         self.x = 0
         self.v = 1
+        self.hv = (self.v**2)/2.0 + self.omega*(self.x**2) 
+        self.h = 0
         self.eiler_x = 0
         self.eiler_v = 1
-        
+        self.eiler_hv = (self.eiler_v**2)/2.0 + self.omega*(self.eiler_x**2)
+        self.eiler_h = 0
         for plot in self.plots.values():
             plot.drop_points()
             plot.clear_plot_clear()
@@ -235,14 +240,22 @@ class Oscillator(QtGui.QWidget):
     def calculate_values(self): 
         self.v = self.v - (self.omega*self.x*self.integr_step)
         self.x = self.x + (self.v*self.integr_step)
+        hv = (self.v**2)/2.0 + self.omega*(self.x**2)
+        self.h = (self.hv - hv)/self.hv
+        self.hv = hv
         
         eiler_v = self.eiler_v
         self.eiler_v = self.eiler_v - (self.omega*self.eiler_x*self.integr_step)
         self.eiler_x = self.eiler_x + (eiler_v*self.integr_step) 
+        eiler_hv = (self.eiler_v**2)/2.0 + self.omega*(self.eiler_x**2)
+        self.eiler_h = (self.eiler_hv - eiler_hv)/self.eiler_hv
+        self.eiler_hv = eiler_hv
 
     def append_points(self):
         self.plots['wave'].add_point('x(t)',   (self.t, self.x))
         self.plots['wave'].add_point('v(t)',   (self.t, self.v))
+        self.plots['wave'].add_point('dH(t)',  (self.t, self.h))
+        self.plots['wave'].add_point('eiler_dH(t)', (self.t, self.eiler_h))
         self.plots['circle'].add_point('v(x)', (self.x, self.v))
         self.plots['circle'].add_point('eiler_v(x)', (self.eiler_x, self.eiler_v))
         self.plots['pendulum'].set_pos(self.x)
