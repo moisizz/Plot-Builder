@@ -41,19 +41,28 @@ class PlotBuildApplication(QtGui.QMainWindow):
         self.plot.set_time_limit(42)       
         self.plot.set_scale_x(1)
         self.plot.set_scale_y(1)
-        self.plot.set_integr_step(0.1)
-        self.plot.set_k(0.005)
-        self.plot.set_m(0.05)
+        self.plot.integr_step = 0.1
+        self.plot.k = 0.005
+        self.plot.m = 0.05
+        self.plot.x = 0
+        self.plot.v = 1
     
     def set_dialog_const(self):
         cd = self.const_dialog.ui
         cd.parameterK.setValue(self.plot.k)
         cd.parameterM.setValue(self.plot.m)
+        cd.parameterX.setValue(self.plot.x)
+        cd.parameterV.setValue(self.plot.v)
         cd.time.setValue(self.plot.time_limit)
         cd.integrStep.setValue(self.plot.integr_step)
         cd.scaleX.setValue(self.plot.scale_x)
         cd.scaleY.setValue(self.plot.scale_y)
         cd.showGrid.setChecked(True)
+        
+        for plot in self.plot.plots.values():
+            for line_name in plot.lines.keys():
+                checkbox = getattr(cd, line_name)
+                checkbox.setChecked(plot.lines[line_name]['enabled'])
     
     #===================================Слоты====================================
         
@@ -66,33 +75,23 @@ class PlotBuildApplication(QtGui.QMainWindow):
         self.plot.set_time_limit(cd.time.value())       
         self.plot.set_scale_x(cd.scaleX.value())
         self.plot.set_scale_y(cd.scaleY.value())
-        self.plot.set_integr_step(cd.integrStep.value())
-        self.plot.set_k(cd.parameterK.value())
-        self.plot.set_m(cd.parameterM.value())
-        self.plot.set_grid(cd.showGrid.isChecked())      
+        self.plot.integr_step = cd.integrStep.value()
+        self.plot.k = cd.parameterK.value()
+        self.plot.m = cd.parameterM.value()
+        self.plot.set_grid(cd.showGrid.isChecked())
+        self.plot.x = cd.parameterX.value()
+        self.plot.v = cd.parameterV.value()      
         
         if cd.lineTypeButton.isChecked():
             self.plot.set_draw_type('lines')
         elif cd.pointTypeButton.isChecked():
             self.plot.set_draw_type('points')
-        
-        self.plot.switch_line('wave', 'canonical_t_x', cd.canonical_t_x.isChecked())
-        self.plot.switch_line('wave', 'canonical_t_v', cd.canonical_t_v.isChecked())
-        
-        self.plot.switch_line('wave', 'eiler_t_x', cd.eiler_t_x.isChecked())
-        self.plot.switch_line('wave', 'eiler_t_v', cd.eiler_t_v.isChecked())
-        
-        self.plot.switch_line('wave', 'vxxv_t_x', cd.vxxv_t_x.isChecked())
-        self.plot.switch_line('wave', 'vxxv_t_v', cd.vxxv_t_v.isChecked())
-        
-        self.plot.switch_line('wave', 'canonical_t_dh', cd.canonical_t_h.isChecked())
-        self.plot.switch_line('wave', 'eiler_t_dh', cd.eiler_t_h.isChecked())
-        self.plot.switch_line('wave', 'vxxv_t_dh', cd.vxxv_t_h.isChecked())
 
-        self.plot.switch_line('circle', 'canonical_x_v', cd.canonical_x_v.isChecked())
-        self.plot.switch_line('circle', 'eiler_x_v', cd.eiler_x_v.isChecked())
-        self.plot.switch_line('circle', 'vxxv_x_v', cd.vxxv_x_v.isChecked())
         
+        for plot in self.plot.plots.values():
+            for line_name in plot.lines.keys():
+                checkbox = getattr(cd, line_name)
+                plot.lines[line_name]['enabled'] = checkbox.isChecked()        
         
         self.plot.start_animated_draw()
     

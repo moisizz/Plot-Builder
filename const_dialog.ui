@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>520</width>
+    <width>611</width>
     <height>456</height>
    </rect>
   </property>
@@ -165,7 +165,7 @@
   <widget class="QDoubleSpinBox" name="parameterK">
    <property name="geometry">
     <rect>
-     <x>262</x>
+     <x>279</x>
      <y>107</y>
      <width>80</width>
      <height>20</height>
@@ -250,7 +250,7 @@
     <string>Параметры:</string>
    </property>
   </widget>
-  <widget class="QLabel" name="scaleXLabel_2">
+  <widget class="QLabel" name="mLabel">
    <property name="geometry">
     <rect>
      <x>149</x>
@@ -263,10 +263,10 @@
     <string>m:</string>
    </property>
   </widget>
-  <widget class="QLabel" name="scaleXLabel_3">
+  <widget class="QLabel" name="kLabel">
    <property name="geometry">
     <rect>
-     <x>250</x>
+     <x>267</x>
      <y>110</y>
      <width>20</width>
      <height>16</height>
@@ -340,7 +340,7 @@
   <widget class="QCheckBox" name="canonical_t_x">
    <property name="geometry">
     <rect>
-     <x>60</x>
+     <x>290</x>
      <y>290</y>
      <width>50</width>
      <height>22</height>
@@ -365,7 +365,7 @@
   <widget class="QCheckBox" name="canonical_t_v">
    <property name="geometry">
     <rect>
-     <x>60</x>
+     <x>290</x>
      <y>320</y>
      <width>50</width>
      <height>22</height>
@@ -387,10 +387,10 @@
     <bool>false</bool>
    </property>
   </widget>
-  <widget class="QCheckBox" name="canonical_t_h">
+  <widget class="QCheckBox" name="canonical_t_dh">
    <property name="geometry">
     <rect>
-     <x>60</x>
+     <x>290</x>
      <y>380</y>
      <width>60</width>
      <height>22</height>
@@ -412,10 +412,10 @@
     <bool>false</bool>
    </property>
   </widget>
-  <widget class="QCheckBox" name="eiler_t_h">
+  <widget class="QCheckBox" name="eiler_t_dh">
    <property name="geometry">
     <rect>
-     <x>230</x>
+     <x>460</x>
      <y>380</y>
      <width>60</width>
      <height>22</height>
@@ -440,7 +440,7 @@
   <widget class="QCheckBox" name="eiler_t_x">
    <property name="geometry">
     <rect>
-     <x>230</x>
+     <x>460</x>
      <y>290</y>
      <width>50</width>
      <height>22</height>
@@ -465,7 +465,7 @@
   <widget class="QCheckBox" name="eiler_t_v">
    <property name="geometry">
     <rect>
-     <x>230</x>
+     <x>460</x>
      <y>320</y>
      <width>50</width>
      <height>22</height>
@@ -473,81 +473,6 @@
    </property>
    <property name="text">
     <string>v(t)</string>
-   </property>
-   <property name="shortcut">
-    <string/>
-   </property>
-   <property name="checked">
-    <bool>true</bool>
-   </property>
-   <property name="autoRepeat">
-    <bool>false</bool>
-   </property>
-   <property name="autoExclusive">
-    <bool>false</bool>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="vxxv_t_h">
-   <property name="geometry">
-    <rect>
-     <x>410</x>
-     <y>380</y>
-     <width>60</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>dH(t)</string>
-   </property>
-   <property name="shortcut">
-    <string/>
-   </property>
-   <property name="checked">
-    <bool>true</bool>
-   </property>
-   <property name="autoRepeat">
-    <bool>false</bool>
-   </property>
-   <property name="autoExclusive">
-    <bool>false</bool>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="vxxv_t_v">
-   <property name="geometry">
-    <rect>
-     <x>410</x>
-     <y>320</y>
-     <width>50</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>v(t)</string>
-   </property>
-   <property name="shortcut">
-    <string/>
-   </property>
-   <property name="checked">
-    <bool>true</bool>
-   </property>
-   <property name="autoRepeat">
-    <bool>false</bool>
-   </property>
-   <property name="autoExclusive">
-    <bool>false</bool>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="vxxv_t_x">
-   <property name="geometry">
-    <rect>
-     <x>410</x>
-     <y>290</y>
-     <width>50</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>x(t)</string>
    </property>
    <property name="shortcut">
     <string/>
@@ -565,7 +490,7 @@
   <widget class="QCheckBox" name="eiler_x_v">
    <property name="geometry">
     <rect>
-     <x>230</x>
+     <x>460</x>
      <y>350</y>
      <width>50</width>
      <height>22</height>
@@ -590,32 +515,7 @@
   <widget class="QCheckBox" name="canonical_x_v">
    <property name="geometry">
     <rect>
-     <x>60</x>
-     <y>350</y>
-     <width>50</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>v(x)</string>
-   </property>
-   <property name="shortcut">
-    <string/>
-   </property>
-   <property name="checked">
-    <bool>true</bool>
-   </property>
-   <property name="autoRepeat">
-    <bool>false</bool>
-   </property>
-   <property name="autoExclusive">
-    <bool>false</bool>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="vxxv_x_v">
-   <property name="geometry">
-    <rect>
-     <x>410</x>
+     <x>290</x>
      <y>350</y>
      <width>50</width>
      <height>22</height>
@@ -640,7 +540,7 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>40</x>
+     <x>270</x>
      <y>270</y>
      <width>101</width>
      <height>17</height>
@@ -653,7 +553,7 @@
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>210</x>
+     <x>440</x>
      <y>270</y>
      <width>110</width>
      <height>17</height>
@@ -661,19 +561,6 @@
    </property>
    <property name="text">
     <string>Метод Эйлера:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_3">
-   <property name="geometry">
-    <rect>
-     <x>410</x>
-     <y>270</y>
-     <width>51</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>ИККИ:</string>
    </property>
   </widget>
   <widget class="QGroupBox" name="drawTypeGroup">
@@ -720,6 +607,189 @@
      <bool>true</bool>
     </property>
    </widget>
+  </widget>
+  <widget class="QLabel" name="xLabel">
+   <property name="geometry">
+    <rect>
+     <x>380</x>
+     <y>110</y>
+     <width>20</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>x:</string>
+   </property>
+  </widget>
+  <widget class="QDoubleSpinBox" name="parameterX">
+   <property name="geometry">
+    <rect>
+     <x>392</x>
+     <y>107</y>
+     <width>80</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="decimals">
+    <number>4</number>
+   </property>
+   <property name="minimum">
+    <double>-99999999.000000000000000</double>
+   </property>
+   <property name="maximum">
+    <double>99999999.000000000000000</double>
+   </property>
+   <property name="singleStep">
+    <double>0.010000000000000</double>
+   </property>
+  </widget>
+  <widget class="QDoubleSpinBox" name="parameterV">
+   <property name="geometry">
+    <rect>
+     <x>505</x>
+     <y>107</y>
+     <width>80</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="decimals">
+    <number>4</number>
+   </property>
+   <property name="minimum">
+    <double>-99999999.000000000000000</double>
+   </property>
+   <property name="maximum">
+    <double>99999999.000000000000000</double>
+   </property>
+   <property name="singleStep">
+    <double>0.010000000000000</double>
+   </property>
+  </widget>
+  <widget class="QLabel" name="xLabel_2">
+   <property name="geometry">
+    <rect>
+     <x>493</x>
+     <y>110</y>
+     <width>20</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>v:</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="exact_t_h">
+   <property name="geometry">
+    <rect>
+     <x>110</x>
+     <y>380</y>
+     <width>60</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>dH(t)</string>
+   </property>
+   <property name="shortcut">
+    <string/>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="autoRepeat">
+    <bool>false</bool>
+   </property>
+   <property name="autoExclusive">
+    <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>270</y>
+     <width>120</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Точное решение</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="exact_x_v">
+   <property name="geometry">
+    <rect>
+     <x>110</x>
+     <y>350</y>
+     <width>50</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>v(x)</string>
+   </property>
+   <property name="shortcut">
+    <string/>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="autoRepeat">
+    <bool>false</bool>
+   </property>
+   <property name="autoExclusive">
+    <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="exact_t_v">
+   <property name="geometry">
+    <rect>
+     <x>110</x>
+     <y>320</y>
+     <width>50</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>v(t)</string>
+   </property>
+   <property name="shortcut">
+    <string/>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="autoRepeat">
+    <bool>false</bool>
+   </property>
+   <property name="autoExclusive">
+    <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="exact_t_x">
+   <property name="geometry">
+    <rect>
+     <x>110</x>
+     <y>290</y>
+     <width>50</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>x(t)</string>
+   </property>
+   <property name="shortcut">
+    <string/>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="autoRepeat">
+    <bool>false</bool>
+   </property>
+   <property name="autoExclusive">
+    <bool>false</bool>
+   </property>
   </widget>
  </widget>
  <resources/>
