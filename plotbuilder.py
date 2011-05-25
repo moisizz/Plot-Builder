@@ -38,31 +38,24 @@ class PlotBuildApplication(QtGui.QMainWindow):
         self.connect(self.const_dialog.ui.resetButton, SIGNAL('clicked()'), self.reset_const_slot)
     
     def const_init(self):
-        self.plot.set_time_limit(42)       
-        self.plot.set_scale_x(1)
-        self.plot.set_scale_y(1)
-        self.plot.integr_step = 0.1
-        self.plot.k = 0.005
-        self.plot.m = 0.05
-        self.plot.x = 0
-        self.plot.v = 1
+        self.plot.init_default_params()
     
     def set_dialog_const(self):
         cd = self.const_dialog.ui
-        cd.parameterK.setValue(self.plot.k)
-        cd.parameterM.setValue(self.plot.m)
-        cd.parameterX.setValue(self.plot.x)
-        cd.parameterV.setValue(self.plot.v)
-        cd.time.setValue(self.plot.time_limit)
-        cd.integrStep.setValue(self.plot.integr_step)
+        
+        for key, value in self.plot.params.items():
+            field = getattr(cd, key)
+            field.setValue(value)
+            
         cd.scaleX.setValue(self.plot.scale_x)
         cd.scaleY.setValue(self.plot.scale_y)
         cd.showGrid.setChecked(True)
         
         for plot in self.plot.plots.values():
             for line_name in plot.lines.keys():
-                checkbox = getattr(cd, line_name)
-                checkbox.setChecked(plot.lines[line_name]['enabled'])
+                if hasattr(cd, line_name):
+                    checkbox = getattr(cd, line_name)
+                    checkbox.setChecked(plot.lines[line_name]['enabled'])
     
     #===================================Слоты====================================
         
@@ -71,27 +64,25 @@ class PlotBuildApplication(QtGui.QMainWindow):
         
     def apply_const_slot(self):
         cd = self.const_dialog.ui
-        
-        self.plot.set_time_limit(cd.time.value())       
         self.plot.set_scale_x(cd.scaleX.value())
         self.plot.set_scale_y(cd.scaleY.value())
-        self.plot.integr_step = cd.integrStep.value()
-        self.plot.k = cd.parameterK.value()
-        self.plot.m = cd.parameterM.value()
         self.plot.set_grid(cd.showGrid.isChecked())
-        self.plot.x = cd.parameterX.value()
-        self.plot.v = cd.parameterV.value()      
         
-        if cd.lineTypeButton.isChecked():
+        for key, value in self.plot.params.items():
+            field = getattr(cd, key)
+            value = field.value()
+            self.plot.params[key] = value
+                    
+        if cd.lineType.isChecked():
             self.plot.set_draw_type('lines')
-        elif cd.pointTypeButton.isChecked():
+        elif cd.pointType.isChecked():
             self.plot.set_draw_type('points')
-
         
         for plot in self.plot.plots.values():
             for line_name in plot.lines.keys():
-                checkbox = getattr(cd, line_name)
-                plot.lines[line_name]['enabled'] = checkbox.isChecked()        
+                if hasattr(cd, line_name):
+                    checkbox = getattr(cd, line_name)
+                    plot.lines[line_name]['enabled'] = checkbox.isChecked()        
         
         self.plot.start_animated_draw()
     

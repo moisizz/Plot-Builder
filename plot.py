@@ -15,7 +15,7 @@ class PlotCanvas(FigureCanvas):
 
         self.scale = scale
         self.grid  = True
-        self.draw_type = 'points'
+        self.draw_type = 'lines'
         
         self.min_axis_x = axes_limits[0]
         self.min_axis_y = axes_limits[1]
@@ -187,17 +187,7 @@ class Oscillator(QtGui.QWidget):
         QtGui.QWidget.__init__(self, parent)   
         self.setParent(parent)           
         
-        self.scale_x = 1
-        self.scale_y = 1
-        self.time_limit = 42
-        self.time_speed = 1
-        self.integr_step = 0.1
-        self.k = 0.005
-        self.m = 0.05
-        self.v = 1
-        self.x = 0
-        self.omega2 = self.k/self.m
-        self.current_time = 0
+        self.init_default_params()
         self.timer = QtCore.QTimer()
 
         h_layout = QtGui.QHBoxLayout()
@@ -212,25 +202,9 @@ class Oscillator(QtGui.QWidget):
 
         self.plots['wave'].figure.subplots_adjust(left=0.025, right=0.99)
 
-        self.plots['wave'].add_line(u'Точное x(t)',   't', 'x',  'exact',     'c', False)
-        self.plots['wave'].add_line(u'Точное v(t)',   't', 'v',  'exact',     'm', False)
-        
         self.plots['wave'].add_line(u'Канон. x(t)',   't', 'x',  'canonical', 'r', True)
         self.plots['wave'].add_line(u'Канон. v(t)',   't', 'v',  'canonical', 'g', True)
-        self.plots['wave'].add_line(u'Канон. dH(t)',  't', 'dh', 'canonical', 'b', True)
-        
-        self.plots['wave'].add_line(u'Эйлер x(t)',    't', 'x',  'eiler',     'c', False)
-        self.plots['wave'].add_line(u'Эйлер v(t)',    't', 'v',  'eiler',     'k', False)
-        self.plots['wave'].add_line(u'Эйлер dH(t)',   't', 'dh', 'eiler',     'y', False)
-        
-        #self.plots['wave'].add_line(u'ИККИ x(t)',     't', 'x',  'vxxv',      'k', False)
-        #self.plots['wave'].add_line(u'ИККИ v(t)',     't', 'v',  'vxxv',      'k', False)
-        #self.plots['wave'].add_line(u'ИККИ dH(t)',    't', 'dh', 'vxxv',      'k', False)
-        
-        self.plots['circle'].add_line(u'Точное v(x)', 'x', 'v',  'exact',     'r', False)
-        self.plots['circle'].add_line(u'Канон. v(x)', 'x', 'v',  'canonical', 'c', False)
-        self.plots['circle'].add_line(u'Эйлер v(x)',  'x', 'v',  'eiler',     'm', False)
-        #self.plots['circle'].add_line(u'ИККИ v(x)',   'x', 'v',  'vxxv',      'y', False)
+        self.plots['circle'].add_line(u'Канон. v(x)', 'x', 'v',  'canonical', 'c', True)
         
         h_layout.addWidget(self.plots['circle'])
         h_layout.addWidget(self.plots['pendulum'])
@@ -238,6 +212,25 @@ class Oscillator(QtGui.QWidget):
         v_layout.addWidget(self.plots['wave'])
         
         self.setLayout(v_layout)
+
+    def init_default_params(self):
+        self.scale_x = 1
+        self.scale_y = 1
+        self.time_speed = 1
+
+        self.params = {}
+
+        self.params['time_limit'] = 42
+        self.params['integr_step'] = 0.1
+        self.params['k'] = 0.005
+        self.params['m'] = 0.05
+        self.params['f'] = 0
+        self.params['f_omega'] = 0
+        self.params['resist_koef'] = 0
+        self.params['v'] = 1
+        self.params['x'] = 0
+        
+        self.current_time = 0
 
     def set_scale_x(self, value):
         self.scale_x = value
@@ -269,81 +262,38 @@ class Oscillator(QtGui.QWidget):
         self.values['t'] = 0
         
         #Задаем начальные значения положения и скорости
-        x = self.x
-        v = self.v
-        self.koef = 0.5
-               
-        #-----------------------Точное-решение-------------------------
-        self.values['exact'] = {}
+        x = self.params['x']
+        v = self.params['v']
         
-        #------------------Канонический метод--------------------------
-        self.values['canonical'] = {}
+        self.values['methods'] = {}
+        self.values['methods']['canonical'] = {}
         
-        #--------------------------Метод Эйлера------------------------
-        self.values['eiler'] = {}
-
-        #------------------Импульс-координата-координата-импульс--------------------------
-        #self.values['vxxv'] = {}
+        for method in self.values['methods'].keys():
+            self.values['methods'][method]['x'] = x
+            self.values['methods'][method]['v'] = v
         
-        for method in self.values.keys():
-            if method != 't':
-                self.values[method]['x'] = x
-                self.values[method]['v'] = v
-                self.values[method]['h0'] = (v**2)/2.0 + self.omega2*(x**2)
-                self.values[method]['dh'] = self.values[method]['h0']
-               
         for plot in self.plots.values():
             plot.drop_points()
             plot.clear_plot_clear()
             plot.draw_plot_area()  
         
     def calculate_values(self): 
-        omega2 = self.k/self.m
-        tt = self.integr_step
-        koef = self.koef
-        #-----------------------Точное-решение-------------------------       
-        (x0, v0) = (self.x, self.v)
-        
-        v = v0 * cos(sqrt(self.omega2)*self.values['t'])
-        x = (v0/sqrt(omega2)) * sin(sqrt(self.omega2)*self.values['t'])
+        omega2 = self.params['k']/self.params['m']
+        tt = self.params['integr_step']
+        resist_koef = self.params['resist_koef']
+        F = self.params['f']
+        f_omega = self.params['f_omega']
+        t = self.values['t']
+        mass = self.params['m']
+        values = self.values['methods']['canonical']
 
-        (self.values['exact']['v'], self.values['exact']['x']) = (v, x) 
 
-        #============================Канонический метод=================================
-        (v, x, h0)  = (self.values['canonical']['v'], self.values['canonical']['x'], self.values['canonical']['h0'])
+        (v, x)  = (values['v'], values['x'])
+               
+        v = v - (omega2 * x * tt) - resist_koef*v*tt + (F/mass)*cos(f_omega*t)*tt
+        x = x + (v * tt)
         
-
-        
-        v  = v - (omega2 * x * tt)   - v*koef*tt #= лабораторная №4
-        x  = x + (v * tt)
-        h  = (v**2)/2.0 + self.omega2*(x**2)
-        dh = (h - h0)
-        
-        (self.values['canonical']['v'], self.values['canonical']['x'], self.values['canonical']['dh']) = (v, x, dh) 
-        
-        """#============================Импульс-координата-координата-импульс=================================
-        (v, x, h0)  = (self.values['vxxv']['v'], self.values['vxxv']['x'], self.values['vxxv']['h0'])
-        
-        v  = v - (omega2 * x * tt)
-        x  = x + (v * tt)
-       
-        x  = x + (v * tt)
-        v  = v - (omega2 * x * tt)
-        h  = (v**2)/2.0 + omega2*(x**2)
-        dh = (h - h0)/h0
-        
-        (self.values['vxxv']['v'], self.values['vxxv']['x'], self.values['vxxv']['dh']) = (v, x, dh)"""
-        
-        #============================Метод Эйлера=================================
-        (v, x, h0)  = (self.values['eiler']['v'], self.values['eiler']['x'], self.values['eiler']['h0'])
-        
-        old_v = v
-        v  = v - (omega2 * x * tt)
-        x  = x + (old_v * tt)
-        h  = (v**2)/2.0 + omega2*(x**2)
-        dh = (h - h0)
-        
-        (self.values['eiler']['v'], self.values['eiler']['x'], self.values['eiler']['dh']) = (v, x, dh) 
+        (values['v'], values['x']) = (v, x) 
 
     def append_points(self):
         for name, plot in self.plots.items():
@@ -353,20 +303,20 @@ class Oscillator(QtGui.QWidget):
                     if line['x_name'] == 't':
                         x = self.values['t']
                     else:
-                        x = self.values[calc_name][line['x_name']]
+                        x = self.values['methods'][calc_name][line['x_name']]
                         
                     if line['y_name'] == 't':
                         y = self.values['t']
                     else:
-                        y = self.values[calc_name][line['y_name']]    
+                        y = self.values['methods'][calc_name][line['y_name']]    
                     plot.add_point(name, (x, y))
         
-        self.plots['pendulum'].set_pos(self.values['exact']['x'])
+        self.plots['pendulum'].set_pos(self.values['methods']['canonical']['x'])
 
     def save_plots(self, path):
         self.clear_plots()
 
-        for t in arange(0, self.time_limit+self.integr_step, self.integr_step):
+        for t in arange(0, self.params['time_limit']+self.params['integr_step'], self.params['integr_step']):
             self.values['t'] = t           
             self.append_points()
             self.calculate_values()
@@ -382,8 +332,8 @@ class Oscillator(QtGui.QWidget):
         self.timer.start(1)       
         
     def timer_slot(self):
-        if self.current_time < self.time_limit:            
-            for t in arange(self.current_time, self.current_time+self.time_speed, self.integr_step):
+        if self.current_time < self.params['time_limit']:            
+            for t in arange(self.current_time, self.current_time+self.time_speed, self.params['integr_step']):
                 self.calculate_values()
                 self.values['t'] = t
                 self.append_points()
