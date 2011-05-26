@@ -34,9 +34,9 @@ class PlotCanvas(FigureCanvas):
 
         self.draw_plot_area()
 
-    def add_line(self, name, x_name, y_name, calc_name, color, is_enabled=True, marker=','):
-        line_key = "%s_%s_%s" % (calc_name, x_name, y_name)
-        self.lines[line_key] = {'x':[], 'x_name':x_name, 'y':[], 'y_name':y_name, 'calc_name':calc_name, 
+    def add_line(self, name, x_name, y_name, color, is_enabled=True, marker=','):
+        line_key = "%s_%s" % (x_name, y_name)
+        self.lines[line_key] = {'x':[], 'x_name':x_name, 'y':[], 'y_name':y_name,
                                 'name':name, 'color':color, 'enabled':is_enabled, 'marker':marker}
         line_plot, = self.plot(self.lines[line_key], is_animated=True)
         self.lines[line_key]['line_plot'] = line_plot
@@ -134,52 +134,57 @@ class PlotCanvas(FigureCanvas):
 class Pendulum(PlotCanvas):
     def __init__(self, title='', axes_limits=(-10,-10,10,10), scale=(1.0,1.0), parent=None):
         PlotCanvas.__init__(self, axes_limits, scale, parent)
-        pos = 0
-        self.pos = pos
-        self.weight_size = 40
-        self.weight_edge_width = 3
+        x = 0
+        y = 0
+        self.x = x
+        self.y = y
+        self.weight_size = 25
+        self.weight_edge_width = 1
         self.weight_type = 'o'
         self.weight_face_color = 'w'
         self.weight_edge_color = 'k'
-        self.thread, = self.axes.plot([0, 0], [self.max_axis_y+5, pos], 'r-', linewidth=2)
-        self.link,   = self.axes.plot([0], [pos], 'ks', lw=2, ms=self.weight_size,  
-                                                              marker=self.weight_type,
-                                                              mec=self.weight_edge_color, 
-                                                              mfc=self.weight_face_color, 
-                                                              mew=self.weight_edge_width)
+        self.thread, = self.axes.plot([0, x], [self.max_axis_y, y], 'r-', linewidth=2)
+        self.link,   = self.axes.plot([x], [y], 'ks', lw=2, ms=self.weight_size,  
+                                                      marker=self.weight_type,
+                                                      mec=self.weight_edge_color, 
+                                                      mfc=self.weight_face_color, 
+                                                      mew=self.weight_edge_width)
         
     def draw_plot_area(self):
-        self.axes.set_title(u"Маятник")
+        self.axes.set_title(u"Математический маятник")
         self.axes.set_xlim(self.min_axis_x, self.max_axis_x)
         self.axes.set_ylim(self.min_axis_y, self.max_axis_y)
-        self.axes.plot([self.min_axis_x - 1, self.max_axis_x + 1], [0, 0], color="black")
-        self.axes.plot([0, 0], [self.min_axis_y - 1, self.max_axis_y + 1], color="black")
+        self.axes.plot([self.min_axis_x, self.max_axis_x], [0, 0], color="black")
+        self.axes.plot([0, 0], [self.min_axis_y, self.max_axis_y], color="black")
         self.draw()
         self.background = self.copy_from_bbox(self.axes.bbox)
 
     def draw_animated(self):
-        pos = self.pos
-        self.thread.set_ydata([self.max_axis_y+5, pos])
-        self.link.set_ydata([pos])
+        self.thread.set_xdata([0, self.x])
+        self.thread.set_ydata([self.max_axis_y, self.y])
+        
+        self.link.set_xdata([self.x])
+        self.link.set_ydata([self.y])
 
         self.restore_region(self.background)
         self.axes.draw_artist(self.thread)
         self.axes.draw_artist(self.link)
         self.blit(self.axes.bbox)
                 
-    def set_pos(self, value):
-        self.pos = value*self.scale[1]
+    def set_pos(self, x, y):
+        self.x = x*self.scale[0]
+        self.y = y*self.scale[1]
                 
     def draw_static(self):    
         self.axes.clear()
         self.draw_plot_area()
         pos = self.pos * self.scale[0]
-        self.axes.plot([0, 0], [self.max_axis_y, pos], 'r-', linewidth=2)
-        self.axes.plot([0], [pos], 'r', lw=2, ms=self.weight_size, 
-                                              marker=self.weight_type,
-                                              mec=self.weight_edge_color, 
-                                              mfc=self.weight_face_color, 
-                                              mew=self.weight_edge_width)
+        self.axes.plot([0, self.x], [self.max_axis_y+5, self.y], 'r-', linewidth=2)
+        self.axes.plot([self.x], [self.y], 'r', lw=2, ms=self.weight_size, 
+                                                 marker=self.weight_type,
+                                                 mec=self.weight_edge_color, 
+                                                 mfc=self.weight_face_color, 
+                                                 mew=self.weight_edge_width)
         self.draw()
 
 class Oscillator(QtGui.QWidget):
@@ -196,19 +201,21 @@ class Oscillator(QtGui.QWidget):
         self.connect(self.timer, SIGNAL('timeout()'), self.timer_slot)
         
         self.plots = {}
-        self.plots['wave']     = PlotCanvas(axes_limits=(-1, -5, 50, 5), scale=(self.scale_x, self.scale_y))
-        self.plots['circle']   = PlotCanvas(axes_limits=(-15, -6, 15, 6),  scale=(self.scale_x, self.scale_y))
-        self.plots['pendulum'] =   Pendulum(axes_limits=(-10, -5, 10, 5),  scale=(self.scale_x, self.scale_y))
+        self.plots['wave']     =   PlotCanvas(axes_limits=(-1, -5, 50, 5),   scale=(self.scale_x, self.scale_y))
+        self.plots['liss']     =   PlotCanvas(axes_limits=(-15, -6, 15, 6),  scale=(self.scale_x, self.scale_y))
+        #self.plots['pendulum'] =   Pendulum(axes_limits=(-10, -5, 10, 10),  scale=(self.scale_x, self.scale_y))
 
         self.plots['wave'].figure.subplots_adjust(left=0.025, right=0.99)
 
-        self.plots['wave'].add_line(u'Канон. x(t)',   't', 'x',  'canonical', 'r', True)
-        self.plots['wave'].add_line(u'Канон. v(t)',   't', 'v',  'canonical', 'g', True)
-        self.plots['circle'].add_line(u'Канон. v(x)', 'x', 'v',  'canonical', 'c', True)
+        self.plots['wave'].add_line(u'x(t)',           't', 'x',   'r', True)
+        self.plots['wave'].add_line(u'y(t)',           't', 'y',   'g', True)
+        self.plots['wave'].add_line(u'vx(t)',          't', 'v_x', 'm', True)
+        self.plots['wave'].add_line(u'vy(t)',          't', 'v_y', 'b', True)
+        self.plots['liss'].add_line(u'Фигура Лиссажу', 'liss_x', 'liss_y', 'c', True)
         
-        h_layout.addWidget(self.plots['circle'])
-        h_layout.addWidget(self.plots['pendulum'])
-        v_layout.addLayout(h_layout)
+        #h_layout.addWidget(self.plots['liss'])
+        #h_layout.addWidget(self.plots['pendulum'])
+        v_layout.addWidget(self.plots['liss'])
         v_layout.addWidget(self.plots['wave'])
         
         self.setLayout(v_layout)
@@ -221,14 +228,13 @@ class Oscillator(QtGui.QWidget):
         self.params = {}
 
         self.params['time_limit'] = 42
-        self.params['integr_step'] = 0.1
-        self.params['k'] = 0.005
-        self.params['m'] = 0.05
-        self.params['f'] = 0
-        self.params['f_omega'] = 0
-        self.params['resist_koef'] = 0
-        self.params['v'] = 1
-        self.params['x'] = 0
+        self.params['integr_step'] = 0.05
+        self.params['omega_2_x'] = 1
+        self.params['omega_2_y'] = 2
+        self.params['x'] = 3
+        self.params['y'] = 4
+        self.params['v_x'] = 10
+        self.params['v_y'] = 1
         
         self.current_time = 0
 
@@ -257,20 +263,10 @@ class Oscillator(QtGui.QWidget):
 
     def clear_plots(self):   
         #Обнуляем время
-        self.values = {}
         self.current_time = 0
-        self.values['t'] = 0
         
-        #Задаем начальные значения положения и скорости
-        x = self.params['x']
-        v = self.params['v']
-        
-        self.values['methods'] = {}
-        self.values['methods']['canonical'] = {}
-        
-        for method in self.values['methods'].keys():
-            self.values['methods'][method]['x'] = x
-            self.values['methods'][method]['v'] = v
+        params = self.params
+        self.values = { 't':0, 'x': params['x'], 'y':params['y'], 'v_x':params['v_x'], 'v_y':params['v_y'] }
         
         for plot in self.plots.values():
             plot.drop_points()
@@ -278,40 +274,37 @@ class Oscillator(QtGui.QWidget):
             plot.draw_plot_area()  
         
     def calculate_values(self): 
-        omega2 = self.params['k']/self.params['m']
-        tt = self.params['integr_step']
-        resist_koef = self.params['resist_koef']
-        F = self.params['f']
-        f_omega = self.params['f_omega']
-        t = self.values['t']
-        mass = self.params['m']
-        values = self.values['methods']['canonical']
-
-
-        (v, x)  = (values['v'], values['x'])
-               
-        v = v - (omega2 * x * tt) - resist_koef*v*tt + (F/mass)*cos(f_omega*t)*tt
-        x = x + (v * tt)
+        values = self.values
+        params = self.params
         
-        (values['v'], values['x']) = (v, x) 
+        tt   = params['integr_step']
+        t    = values['t']
+
+        omega_2_x = params['omega_2_x']
+        omega_2_y = params['omega_2_y']
+
+        (x, y, v_x, v_y) = (values['x'], values['y'], values['v_x'], values['v_y'])
+        
+        v_x = v_x - omega_2_x*x
+        v_y = v_y - omega_2_y*y
+        
+        x = x + v_x*tt
+        y = y + v_y*tt       
+        
+        liss_x = -1*(omega_2_x**2)*x
+        liss_y = -1*(omega_2_y**2)*y
+        
+        (values['x'], values['y'], values['v_x'], values['v_y'], values['liss_x'], values['liss_y']) = (x, y, v_x, v_y, liss_x, liss_y)
 
     def append_points(self):
         for name, plot in self.plots.items():
             if name != 'pendulum':
                 for name, line in plot.lines.items():
-                    calc_name = line['calc_name']
-                    if line['x_name'] == 't':
-                        x = self.values['t']
-                    else:
-                        x = self.values['methods'][calc_name][line['x_name']]
-                        
-                    if line['y_name'] == 't':
-                        y = self.values['t']
-                    else:
-                        y = self.values['methods'][calc_name][line['y_name']]    
+                    x = self.values[line['x_name']]
+                    y = self.values[line['y_name']]    
                     plot.add_point(name, (x, y))
         
-        self.plots['pendulum'].set_pos(self.values['methods']['canonical']['x'])
+        #self.plots['pendulum'].set_pos(self.values['x'], self.values['y'])
 
     def save_plots(self, path):
         self.clear_plots()

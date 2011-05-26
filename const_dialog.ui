@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>726</width>
-    <height>335</height>
+    <width>732</width>
+    <height>318</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>110</x>
-     <y>290</y>
+     <y>270</y>
      <width>85</width>
      <height>27</height>
     </rect>
@@ -30,7 +30,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>290</y>
+     <y>270</y>
      <width>85</width>
      <height>27</height>
     </rect>
@@ -44,7 +44,7 @@
     <rect>
      <x>20</x>
      <y>140</y>
-     <width>241</width>
+     <width>358</width>
      <height>24</height>
     </rect>
    </property>
@@ -56,7 +56,7 @@
      <number>2</number>
     </property>
     <item row="0" column="1">
-     <widget class="QCheckBox" name="canonical_t_x">
+     <widget class="QCheckBox" name="t_x">
       <property name="maximumSize">
        <size>
         <width>53</width>
@@ -81,15 +81,15 @@
      </widget>
     </item>
     <item row="0" column="3">
-     <widget class="QCheckBox" name="canonical_t_v">
+     <widget class="QCheckBox" name="t_v_x">
       <property name="maximumSize">
        <size>
-        <width>51</width>
+        <width>60</width>
         <height>16777215</height>
        </size>
       </property>
       <property name="text">
-       <string>v(t)</string>
+       <string>vx(t)</string>
       </property>
       <property name="shortcut">
        <string/>
@@ -125,15 +125,65 @@
      </widget>
     </item>
     <item row="0" column="2">
-     <widget class="QCheckBox" name="canonical_x_v">
+     <widget class="QCheckBox" name="t_y">
       <property name="maximumSize">
        <size>
-        <width>54</width>
+        <width>53</width>
         <height>16777215</height>
        </size>
       </property>
       <property name="text">
-       <string>v(x)</string>
+       <string>y(t)</string>
+      </property>
+      <property name="shortcut">
+       <string/>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+      <property name="autoRepeat">
+       <bool>false</bool>
+      </property>
+      <property name="autoExclusive">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="5">
+     <widget class="QCheckBox" name="liss_x_liss_y">
+      <property name="maximumSize">
+       <size>
+        <width>53</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>y(x)</string>
+      </property>
+      <property name="shortcut">
+       <string/>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+      <property name="autoRepeat">
+       <bool>false</bool>
+      </property>
+      <property name="autoExclusive">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="4">
+     <widget class="QCheckBox" name="t_v_y">
+      <property name="maximumSize">
+       <size>
+        <width>58</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>vy(t)</string>
       </property>
       <property name="shortcut">
        <string/>
@@ -443,7 +493,7 @@
     <rect>
      <x>20</x>
      <y>80</y>
-     <width>686</width>
+     <width>551</width>
      <height>50</height>
     </rect>
    </property>
@@ -454,33 +504,11 @@
     <property name="spacing">
      <number>2</number>
     </property>
-    <item row="1" column="0">
-     <widget class="QDoubleSpinBox" name="m">
-      <property name="maximumSize">
-       <size>
-        <width>76</width>
-        <height>24</height>
-       </size>
-      </property>
-      <property name="decimals">
-       <number>4</number>
-      </property>
-      <property name="minimum">
-       <double>-99999999.000000000000000</double>
-      </property>
-      <property name="maximum">
-       <double>99999999.000000000000000</double>
-      </property>
-      <property name="singleStep">
-       <double>0.010000000000000</double>
-      </property>
-     </widget>
-    </item>
     <item row="1" column="1">
-     <widget class="QDoubleSpinBox" name="k">
+     <widget class="QDoubleSpinBox" name="omega_2_x">
       <property name="maximumSize">
        <size>
-        <width>75</width>
+        <width>72</width>
         <height>24</height>
        </size>
       </property>
@@ -499,7 +527,7 @@
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="QLabel" name="kLabel">
+     <widget class="QLabel" name="xLabel">
       <property name="maximumSize">
        <size>
         <width>16777215</width>
@@ -514,15 +542,35 @@
        </font>
       </property>
       <property name="text">
-       <string>Жесткость</string>
+       <string>Частота x</string>
       </property>
      </widget>
     </item>
-    <item row="1" column="5">
-     <widget class="QDoubleSpinBox" name="x">
+    <item row="0" column="2">
+     <widget class="QLabel" name="mLabel">
       <property name="maximumSize">
        <size>
-        <width>136</width>
+        <width>109</width>
+        <height>10</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Частота y</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="2">
+     <widget class="QDoubleSpinBox" name="omega_2_y">
+      <property name="maximumSize">
+       <size>
+        <width>73</width>
         <height>24</height>
        </size>
       </property>
@@ -540,48 +588,8 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="5">
-     <widget class="QLabel" name="xLabel">
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>10</height>
-       </size>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>8</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Начальное положение</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="6">
-     <widget class="QLabel" name="xLabel_2">
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>10</height>
-       </size>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>8</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Начальная скорость</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="6">
-     <widget class="QDoubleSpinBox" name="v">
+    <item row="1" column="3">
+     <widget class="QDoubleSpinBox" name="v_x">
       <property name="maximumSize">
        <size>
         <width>122</width>
@@ -602,51 +610,11 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="0">
-     <widget class="QLabel" name="mLabel">
-      <property name="maximumSize">
-       <size>
-        <width>60</width>
-        <height>10</height>
-       </size>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>8</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Массса</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="2">
-     <widget class="QLabel" name="xLabel_15">
-      <property name="maximumSize">
-       <size>
-        <width>163</width>
-        <height>10</height>
-       </size>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>8</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Сопрот. среды</string>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="3">
-     <widget class="QLabel" name="xLabel_16">
+     <widget class="QLabel" name="mLabel_2">
       <property name="maximumSize">
        <size>
-        <width>16777215</width>
+        <width>119</width>
         <height>10</height>
        </size>
       </property>
@@ -658,59 +626,15 @@
        </font>
       </property>
       <property name="text">
-       <string>Внешняя сила</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="2">
-     <widget class="QDoubleSpinBox" name="resist_koef">
-      <property name="maximumSize">
-       <size>
-        <width>89</width>
-        <height>24</height>
-       </size>
-      </property>
-      <property name="decimals">
-       <number>4</number>
-      </property>
-      <property name="minimum">
-       <double>-99999999.000000000000000</double>
-      </property>
-      <property name="maximum">
-       <double>99999999.000000000000000</double>
-      </property>
-      <property name="singleStep">
-       <double>0.010000000000000</double>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="3">
-     <widget class="QDoubleSpinBox" name="f">
-      <property name="maximumSize">
-       <size>
-        <width>88</width>
-        <height>24</height>
-       </size>
-      </property>
-      <property name="decimals">
-       <number>4</number>
-      </property>
-      <property name="minimum">
-       <double>-99999999.000000000000000</double>
-      </property>
-      <property name="maximum">
-       <double>99999999.000000000000000</double>
-      </property>
-      <property name="singleStep">
-       <double>0.010000000000000</double>
+       <string>Начальная скорость x</string>
       </property>
      </widget>
     </item>
     <item row="0" column="4">
-     <widget class="QLabel" name="xLabel_17">
+     <widget class="QLabel" name="mLabel_3">
       <property name="maximumSize">
        <size>
-        <width>16777215</width>
+        <width>120</width>
         <height>10</height>
        </size>
       </property>
@@ -722,15 +646,15 @@
        </font>
       </property>
       <property name="text">
-       <string>Частота силы</string>
+       <string>Начальная скорость y</string>
       </property>
      </widget>
     </item>
     <item row="1" column="4">
-     <widget class="QDoubleSpinBox" name="f_omega">
+     <widget class="QDoubleSpinBox" name="v_y">
       <property name="maximumSize">
        <size>
-        <width>88</width>
+        <width>122</width>
         <height>24</height>
        </size>
       </property>
@@ -745,6 +669,90 @@
       </property>
       <property name="singleStep">
        <double>0.010000000000000</double>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="5">
+     <widget class="QDoubleSpinBox" name="x">
+      <property name="maximumSize">
+       <size>
+        <width>72</width>
+        <height>24</height>
+       </size>
+      </property>
+      <property name="decimals">
+       <number>4</number>
+      </property>
+      <property name="minimum">
+       <double>-99999999.000000000000000</double>
+      </property>
+      <property name="maximum">
+       <double>99999999.000000000000000</double>
+      </property>
+      <property name="singleStep">
+       <double>0.010000000000000</double>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="5">
+     <widget class="QLabel" name="mLabel_4">
+      <property name="maximumSize">
+       <size>
+        <width>109</width>
+        <height>10</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Начальное x</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="6">
+     <widget class="QDoubleSpinBox" name="y">
+      <property name="maximumSize">
+       <size>
+        <width>77</width>
+        <height>24</height>
+       </size>
+      </property>
+      <property name="decimals">
+       <number>4</number>
+      </property>
+      <property name="minimum">
+       <double>-99999999.000000000000000</double>
+      </property>
+      <property name="maximum">
+       <double>99999999.000000000000000</double>
+      </property>
+      <property name="singleStep">
+       <double>0.010000000000000</double>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="6">
+     <widget class="QLabel" name="mLabel_6">
+      <property name="maximumSize">
+       <size>
+        <width>118</width>
+        <height>10</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Начальное y</string>
       </property>
      </widget>
     </item>
