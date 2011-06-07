@@ -4,7 +4,6 @@ import sys
 import os
 from PyQt4.QtCore import SIGNAL
 from PyQt4 import QtGui
-from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
 
 from form import Ui_MainWindow
 from const_dialog import Ui_Dialog

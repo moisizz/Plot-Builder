@@ -201,22 +201,22 @@ class Oscillator(QtGui.QWidget):
         self.connect(self.timer, SIGNAL('timeout()'), self.timer_slot)
         
         self.plots = {}
-        self.plots['wave']     =   PlotCanvas(axes_limits=(-1, -5, 50, 5),   scale=(self.scale_x, self.scale_y))
+        #self.plots['wave']     =   PlotCanvas(axes_limits=(-1, -5, 50, 5),   scale=(self.scale_x, self.scale_y))
         self.plots['liss']     =   PlotCanvas(axes_limits=(-15, -6, 15, 6),  scale=(self.scale_x, self.scale_y))
         #self.plots['pendulum'] =   Pendulum(axes_limits=(-10, -5, 10, 10),  scale=(self.scale_x, self.scale_y))
 
-        self.plots['wave'].figure.subplots_adjust(left=0.025, right=0.99)
+        #self.plots['wave'].figure.subplots_adjust(left=0.025, right=0.99)
 
-        self.plots['wave'].add_line(u'x(t)',           't', 'x',   'r', True)
-        self.plots['wave'].add_line(u'y(t)',           't', 'y',   'g', True)
-        self.plots['wave'].add_line(u'vx(t)',          't', 'v_x', 'm', True)
-        self.plots['wave'].add_line(u'vy(t)',          't', 'v_y', 'b', True)
+        #self.plots['wave'].add_line(u'x(t)',           't', 'x',   'r', True)
+        #self.plots['wave'].add_line(u'y(t)',           't', 'y',   'g', True)
+        #self.plots['wave'].add_line(u'vx(t)',          't', 'v_x', 'm', True)
+        #self.plots['wave'].add_line(u'vy(t)',          't', 'v_y', 'b', True)
         self.plots['liss'].add_line(u'Фигура Лиссажу', 'liss_x', 'liss_y', 'c', True)
         
         #h_layout.addWidget(self.plots['liss'])
         #h_layout.addWidget(self.plots['pendulum'])
         v_layout.addWidget(self.plots['liss'])
-        v_layout.addWidget(self.plots['wave'])
+        #    v_layout.addWidget(self.plots['wave'])
         
         self.setLayout(v_layout)
 
@@ -231,9 +231,9 @@ class Oscillator(QtGui.QWidget):
         self.params['integr_step'] = 0.05
         self.params['omega_2_x'] = 1
         self.params['omega_2_y'] = 2
-        self.params['x'] = 3
-        self.params['y'] = 4
-        self.params['v_x'] = 10
+        self.params['x'] = 11
+        self.params['y'] = 1
+        self.params['v_x'] = 1
         self.params['v_y'] = 1
         
         self.current_time = 0
@@ -285,14 +285,14 @@ class Oscillator(QtGui.QWidget):
 
         (x, y, v_x, v_y) = (values['x'], values['y'], values['v_x'], values['v_y'])
         
-        v_x = v_x - omega_2_x*x
-        v_y = v_y - omega_2_y*y
-        
+        v_x = v_x - omega_2_x*x*tt
         x = x + v_x*tt
+        
+        v_y = v_y - omega_2_y*y*tt
         y = y + v_y*tt       
         
-        liss_x = -1*(omega_2_x**2)*x
-        liss_y = -1*(omega_2_y**2)*y
+        liss_x = (omega_2_x**2)*x
+        liss_y = (omega_2_y**2)*y
         
         (values['x'], values['y'], values['v_x'], values['v_y'], values['liss_x'], values['liss_y']) = (x, y, v_x, v_y, liss_x, liss_y)
 
@@ -311,8 +311,8 @@ class Oscillator(QtGui.QWidget):
 
         for t in arange(0, self.params['time_limit']+self.params['integr_step'], self.params['integr_step']):
             self.values['t'] = t           
-            self.append_points()
             self.calculate_values()
+            self.append_points()
             
         for plot in self.plots.values():
             plot.draw_static()
